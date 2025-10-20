@@ -1,0 +1,43 @@
+{
+  "sidebar": {
+    "home": "Trang chủ",
+    "subjects": "Môn học",
+    "newMaterials": "Tài liệu mới",
+    "categories": "Danh mục",
+    "settings": "Cài đặt"
+  },
+  "home": {
+    "searchPlaceholder": "Tìm tài liệu...",
+    "searchButton": "Tìm kiếm",
+    "bannerTitle": "Kho lưu trữ giáo trình trực tuyến",
+    "bannerSubtitle": "Tìm kiếm, tải về và chia sẻ tài liệu học tập dễ dàng",
+    "exploreButton": "Khám phá ngay",
+    "findButton": "Tìm tài liệu",
+    "featuredDocs": "🔥 Tài liệu nổi bật",
+    "docDetailButton": "Xem chi tiết",
+    "latestDocs": "🆕 Tài liệu mới nhất",
+    "viewButton": "Xem",
+    "subjectCategories": "📚 Danh mục môn học"
+  },
+  "documentDetail": {
+    "title": "Chi tiết tài liệu",
+    "docId": "Mã tài liệu"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "account": {
+      "title": "Cài đặt tài khoản",
+      "name": "Họ và tên",
+      "email": "Email",
+      "save": "Lưu thay đổi"
+    },
+    "theme": {
+      "title": "Giao diện",
+      "darkMode": "Chế độ tối"
+    },
+    "notifications": {
+      "title": "Thông báo",
+      "email": "Thông báo qua email"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "sidebar": {
+    "home": "Home",
+    "subjects": "Subjects",
+    "newMaterials": "New Materials",
+    "categories": "Categories",
+    "settings": "Settings"
+  },
+  "home": {
+    "searchPlaceholder": "Search for documents...",
+    "searchButton": "Search",
+    "bannerTitle": "Online Course Material Archive",
+    "bannerSubtitle": "Easily find, download, and share learning materials",
+    "exploreButton": "Explore Now",
+    "findButton": "Find Materials",
+    "featuredDocs": "🔥 Featured Documents",
+    "docDetailButton": "View Details",
+    "latestDocs": "🆕 Latest Documents",
+    "viewButton": "View",
+    "subjectCategories": "📚 Subject Categories"
+  },
+  "documentDetail": {
+    "title": "Document Details",
+    "docId": "Document ID"
+  },
+  "settings": {
+    "title": "Settings",
+    "account": {
+      "title": "Account Settings",
+      "name": "Full Name",
+      "email": "Email",
+      "save": "Save Changes"
+    },
+    "theme": {
+      "title": "Theme",
+      "darkMode": "Dark Mode"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "email": "Email Notifications"
+    }
+  }
+}
