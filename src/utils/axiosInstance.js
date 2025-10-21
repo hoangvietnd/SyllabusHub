@@ -2,7 +2,7 @@ import axios from 'axios';
 import { isTokenValid, refreshAccessToken } from './auth';
 
 const api = axios.create({
-  baseURL: '/api', // chỉnh lại baseURL theo backend của bạn
+  baseURL: 'https://curriculum-backend-235222027541.us-central1.run.app',
 });
 
 // Request interceptor: attach access token
