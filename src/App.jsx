@@ -39,7 +39,7 @@ function App() {
             bgcolor: 'background.default',
             p: 3,
             transition: 'margin 0.3s',
-            ml: open ? `${drawerWidth*2}px` : 0,
+            ml: open ? `${drawerWidth}px` : 0,
             mt: '64px'
           }}
         >
