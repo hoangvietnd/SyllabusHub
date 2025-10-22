@@ -4,7 +4,8 @@
     "subjects": "Môn học",
     "newMaterials": "Tài liệu mới",
     "categories": "Danh mục",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "upload": "Tải lên tài liệu"
   },
   "home": {
     "searchPlaceholder": "Tìm tài liệu...",
@@ -39,5 +40,16 @@
       "title": "Thông báo",
       "email": "Thông báo qua email"
     }
+  },
+  "uploadPage": {
+    "title": "Tải lên tài liệu mới",
+    "documentTitle": "Tiêu đề tài liệu",
+    "description": "Mô tả",
+    "selectFile": "Chọn tệp",
+    "selected": "Tệp đã chọn",
+    "submit": "Tải lên ngay",
+    "validation": "Vui lòng điền tiêu đề và chọn một tệp.",
+    "success": "Tải tài liệu lên thành công!",
+    "error": "Tải lên thất bại"
   }
 }

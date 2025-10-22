@@ -10,6 +10,7 @@ import './index.css';
 import App from './App.jsx';
 import './i18n'; // Import i18n configuration
 import { ThemeContextProvider } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 const queryClient = new QueryClient();
 
@@ -18,7 +19,9 @@ createRoot(document.getElementById('root')).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <ThemeContextProvider>
-          <App />
+          <AuthProvider>
+            <App />
+          </AuthProvider>
         </ThemeContextProvider>
       </BrowserRouter>
     </QueryClientProvider>

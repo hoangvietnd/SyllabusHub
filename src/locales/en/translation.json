@@ -4,7 +4,8 @@
     "subjects": "Subjects",
     "newMaterials": "New Materials",
     "categories": "Categories",
-    "settings": "Settings"
+    "settings": "Settings",
+    "upload": "Upload Document"
   },
   "home": {
     "searchPlaceholder": "Search for documents...",
@@ -39,5 +40,16 @@
       "title": "Notifications",
       "email": "Email Notifications"
     }
+  },
+  "uploadPage": {
+    "title": "Upload New Document",
+    "documentTitle": "Document Title",
+    "description": "Description",
+    "selectFile": "Select File",
+    "selected": "Selected file",
+    "submit": "Upload Now",
+    "validation": "Please fill in the title and select a file.",
+    "success": "Document uploaded successfully!",
+    "error": "Upload failed"
   }
 }

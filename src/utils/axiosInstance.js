@@ -3,7 +3,8 @@ import { isTokenValid, refreshAccessToken } from "./auth";
 
 const api = axios.create({
   // baseURL: 'https://curriculum-backend-235222027541.us-central1.run.app',
-  baseURL: "http://localhost:8080",
+  // baseURL: "http://localhost:8080",
+  baseURL: "https://vote-let-milton-tears.trycloudflare.com",
 });
 
 // Request interceptor: attach access token
