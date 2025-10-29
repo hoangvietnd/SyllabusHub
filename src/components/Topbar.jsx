@@ -13,30 +13,38 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useNavigate } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
+import { useAuth } from '../contexts/AuthContext'; // Import useAuth
 
 function Topbar({ toggleDrawer }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const { logout } = useAuth(); // Lấy hàm logout từ context
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
+  const handleNavigation = (path) => {
+    navigate(path);
+    handleMenuClose();
+  };
+
+  // Sử dụng hàm logout từ AuthContext
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-    navigate('/login');
+    logout();
+    // AuthContext sẽ tự động điều hướng hoặc component `ProtectedRoute` sẽ xử lý
   };
 
   return (
     <AppBar
       position="fixed"
       sx={{
-        zIndex: (theme) => theme.zIndex.drawer + 1, // luôn phủ lên Drawer
+        zIndex: (theme) => theme.zIndex.drawer + 1,
         bgcolor: 'primary.main'
       }}
     >
@@ -69,12 +77,12 @@ function Topbar({ toggleDrawer }) {
             anchorEl={anchorEl}
             open={open}
             onClose={handleMenuClose}
-            onClick={handleMenuClose}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>Settings</MenuItem>
+            {/* SỬA LỖI: Thêm điều hướng cho các MenuItem */}
+            <MenuItem onClick={() => handleNavigation('/profile')}>Profile</MenuItem>
+            <MenuItem onClick={() => handleNavigation('/settings')}>Settings</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Box>

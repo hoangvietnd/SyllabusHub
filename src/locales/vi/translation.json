@@ -5,7 +5,8 @@
     "newMaterials": "Tài liệu mới",
     "categories": "Danh mục",
     "settings": "Cài đặt",
-    "upload": "Tải lên tài liệu"
+    "upload": "Tải lên tài liệu",
+    "createCourse": "Tạo khóa học mới"
   },
   "home": {
     "searchPlaceholder": "Tìm tài liệu...",
@@ -14,6 +15,7 @@
     "bannerSubtitle": "Tìm kiếm, tải về và chia sẻ tài liệu học tập dễ dàng",
     "exploreButton": "Khám phá ngay",
     "findButton": "Tìm tài liệu",
+    "myProfile": "Hồ Sơ Của Tôi",
     "featuredDocs": "🔥 Tài liệu nổi bật",
     "docDetailButton": "Xem chi tiết",
     "latestDocs": "🆕 Tài liệu mới nhất",
@@ -47,9 +49,38 @@
     "description": "Mô tả",
     "selectFile": "Chọn tệp",
     "selected": "Tệp đã chọn",
-    "submit": "Tải lên ngay",
+    "submit": "Tạo tài liệu",
     "validation": "Vui lòng điền tiêu đề và chọn một tệp.",
-    "success": "Tải tài liệu lên thành công!",
-    "error": "Tải lên thất bại"
+    "success": "Tạo tài liệu thành công!",
+    "error": "Tạo tài liệu thất bại"
+  },
+  "createCoursePage": {
+    "title": "Tạo khóa học mới",
+    "courseName": "Tên khóa học",
+    "courseDescription": "Mô tả khóa học",
+    "courseMaterial": "Tài liệu khóa học (Tùy chọn)",
+    "selectFile": "Chọn tệp tài liệu",
+    "fileName": "Tên tệp",
+    "submit": "Tạo khóa học",
+    "success": "Khóa học đã được tạo thành công!",
+    "error": "Tạo khóa học thất bại. Vui lòng thử lại.",
+    "validation": "Vui lòng nhập tên khóa học."
+  },
+  "notFound": {
+    "title": "Oops! Không tìm thấy trang",
+    "message": "Trang bạn đang tìm kiếm có thể đã bị xóa, đổi tên hoặc tạm thời không có sẵn.",
+    "goHome": "Quay về trang chủ"
+  },
+  "profilePage": {
+    "loadingError": "Không thể tải thông tin hồ sơ. Đang thử lại...",
+    "loadingFailed": "Tải thông tin thất bại. Vui lòng đăng nhập lại.",
+    "noProfile": "Không có thông tin người dùng.",
+    "roleUndefined": "Chưa xác định vai trò",
+    "infoUnavailable": "Thông tin không có sẵn",
+    "editProfile": "Chỉnh sửa hồ sơ",
+    "detailsTitle": "Thông tin chi tiết",
+    "emailLabel": "Địa chỉ Email",
+    "roleLabel": "Vai trò hệ thống",
+    "logoutButton": "Đăng Xuất"
   }
 }

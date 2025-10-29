@@ -1,36 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { isTokenValid, refreshAccessToken } from '../utils/auth';
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom'; // Import Outlet
+import { useAuth } from '../contexts/AuthContext';
 
-function ProtectedRoute({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [valid, setValid] = useState(false);
-  const navigate = useNavigate();
+/**
+ * A component to protect routes that require authentication.
+ * It now uses <Outlet /> to render child routes, which is the standard practice for React Router v6.
+ * This ensures consistent behavior with AuthorizedRoute.
+ */
+function ProtectedRoute() { // Removed `children` prop
+  const { isLoggedIn, loading } = useAuth();
 
-  useEffect(() => {
-    const checkToken = async () => {
-      let token = localStorage.getItem('token');
-      if (token && isTokenValid(token)) {
-        setValid(true);
-      } else {
-        // Try refresh
-        const newToken = await refreshAccessToken();
-        if (newToken && isTokenValid(newToken)) {
-          setValid(true);
-        } else {
-          localStorage.removeItem('token');
-          localStorage.removeItem('refreshToken');
-          navigate('/login');
-        }
-      }
-      setLoading(false);
-    };
-    checkToken();
-  }, [navigate]);
+  // While the AuthContext is initializing, show a loading state.
+  if (loading) {
+    return <div>Loading...</div>; // Or a spinner
+  }
 
-  if (loading) return <div>Loading...</div>;
-
-  return valid ? children : <Navigate to="/login" replace />;
+  // If initialization is complete, check for login status.
+  if (isLoggedIn) {
+    // If logged in, render the nested child routes via the Outlet.
+    return <Outlet />;
+  } else {
+    // If not logged in, redirect to the login page.
+    return <Navigate to="/login" replace />;
+  }
 }
 
 export default ProtectedRoute;

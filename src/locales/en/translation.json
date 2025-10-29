@@ -5,15 +5,17 @@
     "newMaterials": "New Materials",
     "categories": "Categories",
     "settings": "Settings",
-    "upload": "Upload Document"
+    "upload": "Upload Material",
+    "createCourse": "Create New Course"
   },
   "home": {
-    "searchPlaceholder": "Search for documents...",
+    "searchPlaceholder": "Search for materials...",
     "searchButton": "Search",
-    "bannerTitle": "Online Course Material Archive",
+    "bannerTitle": "Online Curriculum Archive",
     "bannerSubtitle": "Easily find, download, and share learning materials",
     "exploreButton": "Explore Now",
-    "findButton": "Find Materials",
+    "findButton": "Find Material",
+    "myProfile": "My Profile",
     "featuredDocs": "🔥 Featured Documents",
     "docDetailButton": "View Details",
     "latestDocs": "🆕 Latest Documents",
@@ -21,7 +23,7 @@
     "subjectCategories": "📚 Subject Categories"
   },
   "documentDetail": {
-    "title": "Document Details",
+    "title": "Document Detail",
     "docId": "Document ID"
   },
   "settings": {
@@ -33,7 +35,7 @@
       "save": "Save Changes"
     },
     "theme": {
-      "title": "Theme",
+      "title": "Appearance",
       "darkMode": "Dark Mode"
     },
     "notifications": {
@@ -42,14 +44,43 @@
     }
   },
   "uploadPage": {
-    "title": "Upload New Document",
+    "title": "Upload New Material",
     "documentTitle": "Document Title",
     "description": "Description",
     "selectFile": "Select File",
     "selected": "Selected file",
-    "submit": "Upload Now",
-    "validation": "Please fill in the title and select a file.",
-    "success": "Document uploaded successfully!",
-    "error": "Upload failed"
+    "submit": "Create Material",
+    "validation": "Please provide a title and select a file.",
+    "success": "Material created successfully!",
+    "error": "Failed to create material"
+  },
+  "createCoursePage": {
+    "title": "Create a New Course",
+    "courseName": "Course Name",
+    "courseDescription": "Course Description",
+    "courseMaterial": "Course Material (Optional)",
+    "selectFile": "Select Material File",
+    "fileName": "File name",
+    "submit": "Create Course",
+    "success": "Course created successfully!",
+    "error": "Failed to create course. Please try again.",
+    "validation": "Please enter a course name."
+  },
+  "notFound": {
+    "title": "Oops! Page not found",
+    "message": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "goHome": "Go to Homepage"
+  },
+  "profilePage": {
+    "loadingError": "Could not load profile. Retrying...",
+    "loadingFailed": "Failed to load profile. Please log in again.",
+    "noProfile": "No user profile information available.",
+    "roleUndefined": "Role not defined",
+    "infoUnavailable": "Information not available",
+    "editProfile": "Edit Profile",
+    "detailsTitle": "User Details",
+    "emailLabel": "Email Address",
+    "roleLabel": "System Role",
+    "logoutButton": "Logout"
   }
 }

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import api from '../utils/axiosInstance';
+import api from '../utils/axiosInstance'; // api instance will be configured with interceptors
 
 const AuthContext = createContext(null);
 
@@ -13,27 +13,17 @@ const AuthContext = createContext(null);
 const processDecodedToken = (decodedToken) => {
   if (!decodedToken) return null;
 
-  // 1. Define the role hierarchy as specified. Order is crucial: highest privilege first.
   const roleHierarchy = ['ADMIN', 'TEACHER', 'STUDENT'];
-
-  // 2. Get the scopes from the token (e.g., "ROLE_TEACHER").
   const scopes = (decodedToken.scope || '').split(' ');
-
-  // 3. Normalize the roles from the backend format to the frontend format.
   const userRoles = scopes.map(s => s.replace('ROLE_', ''));
-
-  // 4. Find the highest-ranking role the user has. If none match, the result will be undefined.
   const highestRole = roleHierarchy.find(role => userRoles.includes(role));
 
-  // 5. Create the standardized user object for the application.
-  const user = {
+  return {
     ...decodedToken,
-    role: highestRole,       // The user's highest role, or undefined if they have no recognized roles.
-    email: decodedToken.sub, // 'sub' (subject) is the standard JWT claim for the user identifier.
-    roles: userRoles,        // Keep a list of all roles from the token.
+    role: highestRole,
+    email: decodedToken.sub,
+    roles: userRoles,
   };
-
-  return user;
 };
 
 export const AuthProvider = ({ children }) => {
@@ -41,22 +31,28 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // This effect runs once on app startup to initialize auth state.
     const initializeAuth = () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
           const decodedToken = jwtDecode(accessToken);
+
+          // Check if token is expired
           if (decodedToken.exp * 1000 > Date.now()) {
-            const user = processDecodedToken(decodedToken);
-            setUser(user);
-            api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+            const userPayload = processDecodedToken(decodedToken);
+            setUser(userPayload);
           } else {
-            logout(); // Token is expired
+            // If the access token is expired, the interceptor will handle refreshing it when the first API call is made.
+            // We can also proactively refresh it here, but for simplicity, we'll let the interceptor do its job.
+            console.log("Access token expired, will be refreshed on next API call.");
           }
         }
       } catch (error) {
-        console.error("Failed to initialize auth from token:", error);
-        logout();
+        console.error("Failed to initialize auth state:", error);
+        // Clear any lingering invalid tokens
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
       } finally {
         setLoading(false);
       }
@@ -65,33 +61,27 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (accessToken, refreshToken) => {
-    if (typeof accessToken !== 'string' || !accessToken) {
-      console.error("Login failed: Invalid token.");
-      logout();
-      return;
-    }
     try {
       const decodedToken = jwtDecode(accessToken);
-      const user = processDecodedToken(decodedToken);
+      const userPayload = processDecodedToken(decodedToken);
 
+      // Store tokens and set user state
       localStorage.setItem('accessToken', accessToken);
-      if (refreshToken) {
-        localStorage.setItem('refreshToken', refreshToken);
-      }
-      
-      setUser(user);
-      api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+      localStorage.setItem('refreshToken', refreshToken);
+      setUser(userPayload);
+
     } catch (error) {
       console.error("Failed to process login:", error);
+      // Ensure a clean state on login failure
       logout();
     }
   };
 
   const logout = () => {
+    // Clear everything
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     setUser(null);
-    delete api.defaults.headers.common['Authorization'];
   };
 
   const authValue = {

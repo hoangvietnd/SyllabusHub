@@ -16,7 +16,7 @@ export async function refreshAccessToken() {
     if (!refreshToken) return null;
 
     try {
-        const res = await fetch('/api/auth/refresh', {
+        const res = await fetch('/auth/refresh', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken })

@@ -1,54 +1,92 @@
-import axios from "axios";
-import { isTokenValid, refreshAccessToken } from "./auth";
+import axios from 'axios';
 
+const API_BASE_URL = 'https://illustrations-fairfield-premiere-provisions.trycloudflare.com';
+// baseURL: 'https://curriculum-backend-235222027541.us-central1.run.app', // User's commented out baseURL
+// baseURL: "http://localhost:8080", // User's commented out baseURL
 const api = axios.create({
-  // baseURL: 'https://curriculum-backend-235222027541.us-central1.run.app',
-  // baseURL: "http://localhost:8080",
-  baseURL: "https://vote-let-milton-tears.trycloudflare.com",
+  baseURL: API_BASE_URL,
 });
 
-// Request interceptor: attach access token
 api.interceptors.request.use(
-  async (config) => {
-    let token = localStorage.getItem("token");
-
-    // If token invalid, try refresh
-    if (token && !isTokenValid(token)) {
-      token = await refreshAccessToken();
-    }
-
+  (config) => {
+    const token = localStorage.getItem('accessToken');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
-
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
-// Response interceptor: handle 401
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If 401 and not already retried
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
+    // SỬA LỖI: Thêm kiểm tra `error.response` để tránh crash khi có lỗi mạng.
+    // Chỉ xử lý lỗi 401 khi có phản hồi từ server.
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      
+      if (isRefreshing) {
+        return new Promise(function(resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers['Authorization'] = 'Bearer ' + token;
+          return api(originalRequest);
+        }).catch(err => {
+          return Promise.reject(err);
+        });
+      }
 
-      const newToken = await refreshAccessToken();
-      if (newToken) {
-        localStorage.setItem("token", newToken);
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return api(originalRequest); // retry request
-      } else {
-        // Refresh failed → logout
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (!refreshToken) {
+        console.error("No refresh token, redirecting to login.");
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
+
+      try {
+        const rs = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+        const { accessToken } = rs.data;
+
+        localStorage.setItem('accessToken', accessToken);
+        processQueue(null, accessToken);
+
+        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+        return api(originalRequest);
+        
+      } catch (_error) {
+        console.error("Token refresh failed!", _error);
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        processQueue(_error, null);
+        window.location.href = '/login';
+        return Promise.reject(_error);
+      } finally {
+        isRefreshing = false;
       }
     }
 
+    // Đối với các lỗi khác (lỗi mạng, 500, 404...), trả về lỗi để catch block ở nơi gọi API có thể xử lý.
     return Promise.reject(error);
   }
 );

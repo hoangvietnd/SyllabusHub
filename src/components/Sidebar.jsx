@@ -15,7 +15,8 @@ import BookIcon from '@mui/icons-material/Book';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import CategoryIcon from '@mui/icons-material/Category';
 import SettingsIcon from '@mui/icons-material/Settings';
-import UploadIcon from '@mui/icons-material/Upload'; // Import Upload icon
+import UploadIcon from '@mui/icons-material/Upload';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; // Import icon mới
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext'; // Import useAuth
@@ -76,10 +77,16 @@ function Sidebar({ drawerWidth, open }) {
 
         {/* Admin/Teacher Specific Navigation */}
         {isAdminOrTeacher && (
-          <ListItem button component={Link} to="/admin/upload">
-            <ListItemIcon><UploadIcon /></ListItemIcon>
-            <ListItemText primary={t('sidebar.upload')} />
-          </ListItem>
+          <>
+            <ListItem button component={Link} to="/admin/create-course">
+              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
+              <ListItemText primary={t('sidebar.createCourse')} />
+            </ListItem>
+            <ListItem button component={Link} to="/admin/upload">
+              <ListItemIcon><UploadIcon /></ListItemIcon>
+              <ListItemText primary={t('sidebar.upload')} />
+            </ListItem>
+          </>
         )}
 
       </List>
