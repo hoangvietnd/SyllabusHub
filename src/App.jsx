@@ -10,14 +10,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import HomeContent from './pages/HomeContent';
 import SubjectsPage from './pages/SubjectsPage';
-import SubjectDetailPage from './pages/SubjectDetailPage';
-import DocumentDetailPage from './pages/DocumentDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
-import NewMaterials from './pages/NewMaterials';
 import Categories from './pages/Categories';
-import UploadPage from './pages/Admin/UploadPage';
-import CreateCoursePage from './pages/Admin/CreateCoursePage'; // Import trang mới
+import CoursesPage from './pages/CoursesPage';
+import CourseFormPage from './pages/CourseFormPage';
+import CourseDetailPage from './pages/CourseDetailPage'; // Import the detail page
 import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
@@ -32,18 +30,17 @@ function App() {
           {/* General Authenticated Routes */}
           <Route path="/" element={<HomeContent />} />
           <Route path="/subjects" element={<SubjectsPage />} />
-          <Route path="/subjects/:subjectId" element={<SubjectDetailPage />} />
-          <Route path="/documents/:docId" element={<DocumentDetailPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/new-materials" element={<NewMaterials />} />
           <Route path="/categories" element={<Categories />} />
+          
+          {/* CRUD Routes for Courses */}
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/courses/new" element={<CourseFormPage />} />
+          <Route path="/courses/edit/:id" element={<CourseFormPage />} />
+          {/* This is the new route that connects the URL to the detail page component */}
+          <Route path="/courses/:id" element={<CourseDetailPage />} />
 
-          {/* Admin & Teacher Routes (also inside MainLayout) */}
-          <Route element={<AuthorizedRoute allowedRoles={['ADMIN', 'TEACHER']} />}>
-            <Route path="/admin/upload" element={<UploadPage />} />
-            <Route path="/admin/create-course" element={<CreateCoursePage />} />
-          </Route>
         </Route>
       </Route>
 

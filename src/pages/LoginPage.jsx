@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Paper, TextField, Button, Typography, Alert } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
-// URL backend được giữ nguyên theo yêu cầu của bạn.
-const API_BASE_URL = 'https://illustrations-fairfield-premiere-provisions.trycloudflare.com';
-
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +21,7 @@ function LoginPage() {
 
     try {
       // SỬ DỤNG FETCH: Đơn giản, trực tiếp, không có interceptor phức tạp.
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           // Header quan trọng để backend hiểu đây là dữ liệu JSON

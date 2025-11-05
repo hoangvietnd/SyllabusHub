@@ -16,7 +16,8 @@ import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import CategoryIcon from '@mui/icons-material/Category';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UploadIcon from '@mui/icons-material/Upload';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'; // Import icon mới
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ClassIcon from '@mui/icons-material/Class'; // Import icon mới
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../contexts/AuthContext'; // Import useAuth
@@ -63,6 +64,10 @@ function Sidebar({ drawerWidth, open }) {
         <ListItem button component={Link} to="/subjects">
           <ListItemIcon><BookIcon /></ListItemIcon>
           <ListItemText primary={t('sidebar.subjects')} />
+        </ListItem>
+        <ListItem button component={Link} to="/courses">
+          <ListItemIcon><ClassIcon /></ListItemIcon>
+          <ListItemText primary={t('sidebar.courses')} />
         </ListItem>
         <ListItem button component={Link} to="/new-materials">
           <ListItemIcon><NewReleasesIcon /></ListItemIcon>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Box, CssBaseline } from '@mui/material';
+import { Box, CssBaseline, Toolbar } from '@mui/material';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
+import Footer from './Footer';
 
 const drawerWidth = 240;
 
@@ -16,21 +17,35 @@ function MainLayout() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Topbar toggleDrawer={toggleDrawer} />
+      <Topbar toggleDrawer={toggleDrawer} open={open} drawerWidth={drawerWidth} />
       <Sidebar drawerWidth={drawerWidth} open={open} />
       <Box
         component="main"
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
           flexGrow: 1,
           bgcolor: 'background.default',
-          p: 3,
-          transition: 'margin 0.3s',
-          marginLeft: open ? `${drawerWidth}px` : '64px',
-          marginTop: '64px',
+          minHeight: '100vh',
+          transition: (theme) => theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+          marginLeft: `-${drawerWidth}px`,
+          ...(open && {
+            transition: (theme) => theme.transitions.create('margin', {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+          }),
         }}
       >
-        {/* Child routes will be rendered here */}
-        <Outlet />
+        <Toolbar />
+        <Box component="div" sx={{ p: 3, flexGrow: 1 }}>
+          <Outlet />
+        </Box>
+        <Footer />
       </Box>
     </Box>
   );

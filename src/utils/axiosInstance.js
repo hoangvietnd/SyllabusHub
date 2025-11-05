@@ -1,10 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://illustrations-fairfield-premiere-provisions.trycloudflare.com';
-// baseURL: 'https://curriculum-backend-235222027541.us-central1.run.app', // User's commented out baseURL
-// baseURL: "http://localhost:8080", // User's commented out baseURL
+// SỬA LỖI: Không hard-code URL nữa, đọc từ biến môi trường của Vite.
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 api.interceptors.request.use(
@@ -39,8 +37,6 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // SỬA LỖI: Thêm kiểm tra `error.response` để tránh crash khi có lỗi mạng.
-    // Chỉ xử lý lỗi 401 khi có phản hồi từ server.
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
       
       if (isRefreshing) {
@@ -65,7 +61,8 @@ api.interceptors.response.use(
       }
 
       try {
-        const rs = await axios.post(`${API_BASE_URL}/auth/refresh`, { refreshToken });
+        // SỬA LỖI: Request refresh token cũng phải dùng biến môi trường
+        const rs = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/refresh`, { refreshToken });
         const { accessToken } = rs.data;
 
         localStorage.setItem('accessToken', accessToken);
@@ -86,7 +83,6 @@ api.interceptors.response.use(
       }
     }
 
-    // Đối với các lỗi khác (lỗi mạng, 500, 404...), trả về lỗi để catch block ở nơi gọi API có thể xử lý.
     return Promise.reject(error);
   }
 );

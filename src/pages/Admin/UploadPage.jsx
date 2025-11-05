@@ -7,7 +7,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 // The mutation function that handles the file upload
 const uploadMaterial = async (formData) => {
-  const { data } = await api.post('/api/materials/upload', formData, {
+  const { data } = await api.post('/materials/upload', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

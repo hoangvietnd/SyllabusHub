@@ -15,10 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useAuth } from '../contexts/AuthContext'; // Import useAuth
 
-function Topbar({ toggleDrawer }) {
+function Topbar({ toggleDrawer, open, drawerWidth }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { logout } = useAuth(); // Lấy hàm logout từ context
-  const open = Boolean(anchorEl);
+  const menuOpen = Boolean(anchorEl);
   const navigate = useNavigate();
 
   const handleMenuOpen = (event) => {
@@ -45,7 +45,19 @@ function Topbar({ toggleDrawer }) {
       position="fixed"
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        bgcolor: 'primary.main'
+        bgcolor: 'primary.main',
+        transition: (theme) => theme.transitions.create(['width', 'margin'], {
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
+        }),
+        ...(open && {
+          width: `calc(100% - ${drawerWidth}px)`,
+          marginLeft: `${drawerWidth}px`,
+          transition: (theme) => theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        }),
       }}
     >
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -75,7 +87,7 @@ function Topbar({ toggleDrawer }) {
           </IconButton>
           <Menu
             anchorEl={anchorEl}
-            open={open}
+            open={menuOpen}
             onClose={handleMenuClose}
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
