@@ -29,14 +29,22 @@
     "create": "Create",
     "edit": "Edit",
     "delete": "Delete",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "refresh": "Refresh",
+    "actions": "Actions",
+    "description": "Description",
+    "name": "Name",
+    "none": "None",
+    "download": "Download"
   },
   "validation": {
-    "titleMin": "Title must be at least 3 characters long"
+    "titleMin": "Title must be at least 3 characters long",
+    "nameMin": "Name must be at least 3 characters long"
   },
   "deleteDialog": {
     "title": "Confirm Deletion",
-    "description": "Are you sure you want to delete this item? This action cannot be undone."
+    "description": "Are you sure you want to delete this item? This action cannot be undone.",
+    "materialDescription": "Are you sure you want to delete this material? This action cannot be undone."
   },
   "materialUpload": {
     "title": "Upload New Material",
@@ -49,15 +57,8 @@
     "fileRequired": "Please select a file to upload."
   },
   "createCoursePage": {
-      "courseTags": "Tags",
-      "tagsHelperText": "Press Enter to add a tag",
-      "courseMaterial": "Course Material",
-      "selectFile": "Select File",
-      "fileName": "Selected file"
-  },
-  "documentDetail": {
-    "title": "Document Detail",
-    "docId": "Document ID"
+    "courseTags": "Tags",
+    "tagsHelperText": "Press Enter to add a tag"
   },
   "settings": {
     "title": "Settings",
@@ -76,25 +77,11 @@
       "email": "Email Notifications"
     }
   },
-  "uploadPage": {
-    "title": "Upload New Material",
-    "documentTitle": "Document Title",
-    "description": "Description",
-    "selectFile": "Select File",
-    "selected": "Selected file",
-    "submit": "Create Material",
-    "validation": "Please provide a title and select a file.",
-    "success": "Material created successfully!",
-    "error": "Failed to create material"
-  },
   "coursesPage": {
-    "title": "All Courses",
     "manageTitle": "Manage Courses",
     "createNew": "Create New Course",
     "noCourses": "No courses found.",
     "error": "Could not load courses.",
-    "viewDetails": "View Details",
-    "download": "Download",
     "table": {
       "title": "Title",
       "description": "Description",
@@ -106,16 +93,24 @@
     "createTitle": "Create New Course",
     "loadError": "Could not load course data.",
     "titleLabel": "Course Title",
-    "descriptionLabel": "Detailed Description"
+    "descriptionLabel": "Detailed Description",
+    "subjectLabel": "Subject"
   },
   "courseDetailPage": {
-    "error": "Error loading course details",
     "notFound": "Course not found",
-    "backButton": "Back to Courses",
     "materialsTitle": "Course Materials",
-    "noMaterials": "No materials available for this course yet.",
-    "downloadMaterial": "Download Material",
-    "downloadError": "Failed to download the material. Please try again."
+    "noMaterials": "No materials uploaded for this course yet.",
+    "noDescription": "No description provided"
+  },
+  "subjectsPage": {
+    "manageTitle": "Manage Subjects",
+    "createNew": "Create New Subject",
+    "noSubjects": "No subjects found."
+  },
+  "subjectForm": {
+    "editTitle": "Edit Subject",
+    "createTitle": "Create New Subject",
+    "nameLabel": "Subject Name"
   },
   "notFound": {
     "title": "Oops! Page not found",

@@ -14,23 +14,31 @@ import {
   CircularProgress,
   Alert,
   Stack,
-  Chip
+  Chip,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+
+// API Calls
 import { getCourseById, createCourse, updateCourse } from '../api/courses';
+import { listSubjects } from '../api/subjects';
 
-// Schema for basic course data validation
-const courseSchema = z.object({
-  title: z.string().min(3, 'validation.titleMin'),
-  description: z.string().optional(),
-});
-
-function CourseFormPage() {
+const CourseFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const isEditMode = Boolean(id);
+
+  // Schema for validation, now including subjectId
+  const courseSchema = z.object({
+    title: z.string().min(3, t('validation.titleMin')),
+    description: z.string().optional(),
+    subjectId: z.string().nullable().optional(), // subjectId can be a string or null
+  });
 
   const [apiError, setApiError] = useState(null);
   const [tags, setTags] = useState([]);
@@ -38,26 +46,35 @@ function CourseFormPage() {
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(courseSchema),
-    defaultValues: { title: '', description: '' },
+    defaultValues: { title: '', description: '', subjectId: '' }, // Initialize subjectId
   });
 
+  // Query for the course to edit
   const { data: courseData, isLoading: isLoadingCourse, isError: isCourseError } = useQuery({
     queryKey: ['course', id],
     queryFn: () => getCourseById(id),
     enabled: isEditMode,
     onSuccess: (data) => {
-      reset({ title: data.title, description: data.description });
+      reset({ 
+        title: data.title, 
+        description: data.description, 
+        subjectId: data.subject?.id || '' // Set subjectId from nested object
+      });
       setTags(data.tags || []);
     },
   });
 
+  // Query for the list of subjects to populate the dropdown
+  const { data: subjects, isLoading: isLoadingSubjects } = useQuery({
+    queryKey: ['subjects'],
+    queryFn: () => listSubjects({ page: 1, limit: 1000 }).then(data => data.content),
+  });
+
   const mutationOptions = {
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries(['courses']);
-      if (isEditMode) {
-        queryClient.invalidateQueries(['course', id]);
-      }
-      navigate('/courses');
+      // Navigate to the detail page after creation/update
+      navigate(`/courses/${data.id}`);
     },
     onError: (error) => {
       const errorMsg = error.response?.data?.message || error.message;
@@ -65,8 +82,11 @@ function CourseFormPage() {
     },
   };
 
-  const createMutation = useMutation({ ...mutationOptions, mutationFn: createCourse });
-  const updateMutation = useMutation({ ...mutationOptions, mutationFn: (vars) => updateCourse(id, vars) });
+  const mutation = useMutation({
+    mutationFn: (courseData) => 
+      isEditMode ? updateCourse({ id, courseData }) : createCourse(courseData),
+    ...mutationOptions
+  });
 
   const handleAddTag = (event) => {
     if ((event.key === 'Enter' || event.type === 'blur') && tagInput.trim() !== '') {
@@ -84,18 +104,19 @@ function CourseFormPage() {
 
   const onSubmit = (formData) => {
     setApiError(null);
-    const submissionData = { ...formData, tags };
-    if (isEditMode) {
-      updateMutation.mutate(submissionData);
-    } else {
-      createMutation.mutate(submissionData);
-    }
+    const submissionData = { 
+      ...formData, 
+      tags, 
+      // Ensure subjectId is null if it's an empty string
+      subjectId: formData.subjectId || null 
+    };
+    mutation.mutate(submissionData);
   };
 
   if (isLoadingCourse) return <CircularProgress />;
   if (isCourseError) return <Alert severity="error">{t('courseForm.loadError')}</Alert>;
 
-  const isMutating = createMutation.isLoading || updateMutation.isLoading;
+  const isMutating = mutation.isLoading;
 
   return (
     <Container maxWidth="md">
@@ -107,6 +128,29 @@ function CourseFormPage() {
           <Stack spacing={3} sx={{ mt: 3 }}>
             {apiError && <Alert severity="error">{apiError}</Alert>}
             
+            {/* Subject Dropdown */}
+            <FormControl fullWidth disabled={isLoadingSubjects || isMutating}>
+              <InputLabel id="subject-select-label">{t('courseForm.subjectLabel')}</InputLabel>
+              <Controller
+                name="subjectId"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    labelId="subject-select-label"
+                    label={t('courseForm.subjectLabel')}
+                  >
+                    <MenuItem value=""><em>{t('common.none')}</em></MenuItem>
+                    {subjects?.map((subject) => (
+                      <MenuItem key={subject.id} value={subject.id}>
+                        {subject.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
+            </FormControl>
+
             <Controller
               name="title"
               control={control}
@@ -117,7 +161,7 @@ function CourseFormPage() {
                   fullWidth
                   required
                   error={!!errors.title}
-                  helperText={errors.title ? t(errors.title.message) : ''}
+                  helperText={errors.title?.message}
                   disabled={isMutating}
                 />
               )}

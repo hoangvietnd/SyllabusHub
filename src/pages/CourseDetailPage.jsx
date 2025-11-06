@@ -1,171 +1,202 @@
 import React, { useState } from 'react';
-import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getCourseById } from '../api/courses';
+import { deleteMaterial } from '../api/materials';
+// CORRECTED IMPORT PATH AGAIN
+import { getApiBaseUrl } from '../utils/axiosInstance';
+
+// MUI Components
 import {
   Box,
   Typography,
-  Chip,
+  Button,
   CircularProgress,
   Alert,
   Paper,
-  Button,
-  Divider,
+  Stack,
+  Chip,
   List,
   ListItem,
-  ListItemIcon,
   ListItemText,
+  ListItemIcon,
   IconButton,
   Tooltip,
-  Stack,
-  Card, 
-  CardContent
+  Divider
 } from '@mui/material';
-import {
-  ArrowBack as ArrowBackIcon,
-  Description as DescriptionIcon,
-  Download as DownloadIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  Add as AddIcon,
-} from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
-import { getCourseById } from '../api/courses'; // Assuming getCourseById fetches course with materials
-import { deleteMaterial } from '../api/materials';
+
+// MUI Icons
+import { Upload, Delete, Download, Edit, Article, School } from '@mui/icons-material';
+
+// Local Components
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import MaterialUploadDialog from '../components/MaterialUploadDialog';
 
-function CourseDetailPage() {
+const CourseDetailPage = () => {
+  const { id } = useParams();
   const { t } = useTranslation();
-  const { id: courseId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [isUploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [isConfirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
+  const [isUploadOpen, setUploadOpen] = useState(false);
+  const [isConfirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [materialToDelete, setMaterialToDelete] = useState(null);
 
-  const { data: course, isLoading, isError, error } = useQuery({
-    queryKey: ['course', courseId],
-    queryFn: () => getCourseById(courseId),
-    enabled: !!courseId,
+  const { 
+    data: course, 
+    isLoading: isLoadingCourse, 
+    isError: isCourseError, 
+    error: courseError, 
+    refetch: refetchCourse 
+  } = useQuery({
+    queryKey: ['course', id],
+    queryFn: () => getCourseById(id),
+    enabled: !!id, // Ensure query runs only when id is available
   });
 
-  const deleteMaterialMutation = useMutation({
+  const { mutate: doDeleteMaterial, isLoading: isDeletingMaterial } = useMutation({
     mutationFn: deleteMaterial,
     onSuccess: () => {
-      queryClient.invalidateQueries(['course', courseId]);
-      handleCloseConfirmDelete();
+      setConfirmDeleteOpen(false);
+      queryClient.invalidateQueries(['course', id]); 
     },
+    onError: (error) => {
+      // You can add more robust error handling here, e.g., a snackbar
+      console.error("Failed to delete material:", error);
+    }
   });
 
-  const handleOpenConfirmDelete = (materialId) => {
+  const handleDeleteClick = (materialId) => {
     setMaterialToDelete(materialId);
-    setConfirmDeleteDialogOpen(true);
-  };
-
-  const handleCloseConfirmDelete = () => {
-    setMaterialToDelete(null);
-    setConfirmDeleteDialogOpen(false);
+    setConfirmDeleteOpen(true);
   };
 
   const handleConfirmDelete = () => {
     if (materialToDelete) {
-      deleteMaterialMutation.mutate(materialToDelete);
-    }
-  };
-  
-  const handleDownload = async (material) => {
-    const token = localStorage.getItem('accessToken');
-    const downloadUrl = `${import.meta.env.VITE_API_BASE_URL}/materials/download/${material.filePath}`;
-    try {
-      const response = await fetch(downloadUrl, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error(`Download failed: ${response.statusText}`);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = material.name;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (err) {
-      console.error(err);
-      alert(t('courseDetailPage.downloadError'));
+      doDeleteMaterial(materialToDelete);
     }
   };
 
-  if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
-  if (isError) return <Alert severity="error" sx={{ mt: 4 }}>{t('courseDetailPage.error')}: {error.message}</Alert>;
-  if (!course) return <Alert severity="info" sx={{ mt: 4 }}>{t('courseDetailPage.notFound')}</Alert>;
+  const handleUploadSuccess = () => {
+    refetchCourse();
+  };
+
+  if (isLoadingCourse) {
+    return <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}><CircularProgress /></Box>;
+  }
+
+  if (isCourseError) {
+    return <Alert severity="error" sx={{ m: 2 }}>{`Error loading course: ${courseError.message}`}</Alert>;
+  }
+
+  if (!course) {
+    return <Typography sx={{ textAlign: 'center', p: 4 }}>{t('courseDetailPage.notFound')}</Typography>;
+  }
+
+  const materials = course.materials || [];
+  const apiBaseUrl = getApiBaseUrl(); // Get base URL from the instance
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3 } }}>
-      <Button component={RouterLink} to="/courses" startIcon={<ArrowBackIcon />} sx={{ mb: 2 }}>
-        {t('courseDetailPage.backButton')}
-      </Button>
-
-      <Paper sx={{ p: { xs: 2, sm: 4 }, borderRadius: 2, mb: 4 }}>
-        <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-            <Box>
-                <Typography variant="h4" component="h1" gutterBottom>{course.title}</Typography>
-                {course.tags && course.tags.length > 0 && (
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                        {course.tags.map((tag) => <Chip key={tag} label={tag} color="primary" />)}
-                    </Box>
+    <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+      {/* Course Header */}
+      <Paper sx={{ p: { xs: 2, md: 3 }, mb: 3, borderRadius: 2, boxShadow: 3 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
+            <Box flexGrow={1}>
+                {course.subject && (
+                    <Chip 
+                        icon={<School />} 
+                        label={course.subject.name} 
+                        color="primary" 
+                        sx={{ mb: 1.5, fontWeight: 'bold' }} 
+                    />
                 )}
+                <Typography variant="h4" component="h1" gutterBottom>{course.title}</Typography>
+                <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+                    {course.description}
+                </Typography>
             </Box>
-            <Button variant="outlined" startIcon={<EditIcon />} onClick={() => navigate(`/courses/edit/${courseId}`)}>{t('common.edit')}</Button>
+            <Button variant="outlined" startIcon={<Edit />} onClick={() => navigate(`/courses/edit/${id}`)}>
+              {t('common.edit')}
+            </Button>
         </Stack>
-        <Typography variant="body1" color="text.secondary" paragraph>{course.description}</Typography>
+        {course.tags && course.tags.length > 0 && (
+            <>
+              <Divider sx={{ my: 2 }}/>
+              <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+                  {course.tags.map((tag) => <Chip key={tag} label={tag} variant="outlined" size="small" />)}
+              </Stack>
+            </>
+        )}
       </Paper>
 
-      <Card sx={{ borderRadius: 2 }}>
-        <CardContent>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
-                <Typography variant="h5" component="h2">{t('courseDetailPage.materialsTitle')}</Typography>
-                <Button variant="contained" startIcon={<AddIcon />} onClick={() => setUploadDialogOpen(true)}>{t('materialUpload.addNew')}</Button>
-            </Stack>
-            <Divider sx={{ mb: 2 }}/>
-            {deleteMaterialMutation.isError && <Alert severity="error" sx={{mb: 2}}>{deleteMaterialMutation.error.message}</Alert>}
-            <List>
-            {course.materials && course.materials.length > 0 ? (
-                course.materials.map((material) => (
-                <ListItem key={material.id} disablePadding>
-                     <ListItemIcon sx={{minWidth: '40px'}}><DescriptionIcon /></ListItemIcon>
-                     <ListItemText primary={material.name} secondary={material.description} />
-                     <Stack direction="row" spacing={1}>
-                        <Tooltip title={t('courseDetailPage.downloadMaterial')}><IconButton onClick={() => handleDownload(material)}><DownloadIcon /></IconButton></Tooltip>
-                        <Tooltip title={t('common.delete')}><IconButton onClick={() => handleOpenConfirmDelete(material.id)}><DeleteIcon /></IconButton></Tooltip>
-                     </Stack>
+      {/* Materials Section */}
+      <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 2, boxShadow: 3 }}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+          <Typography variant="h5">{t('courseDetailPage.materialsTitle')}</Typography>
+          <Button variant="contained" startIcon={<Upload />} onClick={() => setUploadOpen(true)}>
+            {t('materialUpload.addNew')}
+          </Button>
+        </Stack>
+
+        <Divider sx={{mb: 2}}/>
+
+        {materials.length > 0 ? (
+          <List>
+            {materials.map((material) => {
+              // CORRECTLY CONSTRUCTED URL
+              const downloadUrl = `${apiBaseUrl}/materials/download/${material.filePath}`;
+              return (
+                <ListItem 
+                  key={material.id} 
+                  secondaryAction={
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title={t('common.download')}>
+                          <IconButton component="a" href={downloadUrl} target="_blank" rel="noopener noreferrer">
+                              <Download />
+                          </IconButton>
+                      </Tooltip>
+                      <Tooltip title={t('common.delete')}>
+                          <IconButton edge="end" onClick={() => handleDeleteClick(material.id)} disabled={isDeletingMaterial}>
+                              <Delete />
+                          </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  }
+                >
+                  <ListItemIcon><Article /></ListItemIcon>
+                  <ListItemText 
+                      primary={material.name} // CORRECT FIELD
+                      secondary={material.description || t('courseDetailPage.noDescription')}
+                  />
                 </ListItem>
-                ))
-            ) : (
-                <ListItem><ListItemText primary={t('courseDetailPage.noMaterials')} /></ListItem>
-            )}
-            </List>
-        </CardContent>
-      </Card>
+              );
+            })}
+          </List>
+        ) : (
+          <Typography sx={{ textAlign: 'center', p: 3, color: 'text.secondary' }}>
+            {t('courseDetailPage.noMaterials')}
+          </Typography>
+        )}
+      </Paper>
 
-      <MaterialUploadDialog 
-        open={isUploadDialogOpen} 
-        onClose={() => setUploadDialogOpen(false)} 
-        courseId={courseId} 
+      {/* Dialogs */}
+      <MaterialUploadDialog
+        open={isUploadOpen}
+        onClose={() => setUploadOpen(false)}
+        courseId={id}
+        onSuccess={handleUploadSuccess}
       />
-
       <ConfirmationDialog
-        open={isConfirmDeleteDialogOpen}
-        onClose={handleCloseConfirmDelete}
+        open={isConfirmDeleteOpen}
+        onClose={() => setConfirmDeleteOpen(false)}
         onConfirm={handleConfirmDelete}
         title={t('deleteDialog.title')}
-        description={t('deleteDialog.description')}
-        isLoading={deleteMaterialMutation.isLoading}
+        description={t('deleteDialog.materialDescription')}
+        isLoading={isDeletingMaterial}
       />
     </Box>
   );
-}
+};
 
 export default CourseDetailPage;

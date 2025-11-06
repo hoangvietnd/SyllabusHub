@@ -29,14 +29,22 @@
     "create": "Tạo mới",
     "edit": "Chỉnh sửa",
     "delete": "Xóa",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "refresh": "Làm mới",
+    "actions": "Hành động",
+    "description": "Mô tả",
+    "name": "Tên",
+    "none": "Không có",
+    "download": "Tải xuống"
   },
   "validation": {
-      "titleMin": "Tiêu đề phải có ít nhất 3 ký tự"
+    "titleMin": "Tiêu đề phải có ít nhất 3 ký tự",
+    "nameMin": "Tên phải có ít nhất 3 ký tự"
   },
   "deleteDialog": {
     "title": "Xác nhận Xóa",
-    "description": "Bạn có chắc chắn muốn xóa mục này không? Hành động này không thể hoàn tác."
+    "description": "Bạn có chắc chắn muốn xóa mục này không? Hành động này không thể hoàn tác.",
+    "materialDescription": "Bạn có chắc chắn muốn xóa tài liệu này không? Hành động này không thể hoàn tác."
   },
   "materialUpload": {
     "title": "Tải lên Tài liệu Mới",
@@ -49,15 +57,8 @@
     "fileRequired": "Vui lòng chọn một tệp để tải lên."
   },
   "createCoursePage": {
-      "courseTags": "Thẻ (Tags)",
-      "tagsHelperText": "Nhấn Enter để thêm thẻ",
-      "courseMaterial": "Tài liệu khóa học",
-      "selectFile": "Chọn tệp",
-      "fileName": "Tệp đã chọn"
-  },
-  "documentDetail": {
-    "title": "Chi tiết tài liệu",
-    "docId": "Mã tài liệu"
+    "courseTags": "Thẻ (Tags)",
+    "tagsHelperText": "Nhấn Enter để thêm thẻ"
   },
   "settings": {
     "title": "Cài đặt",
@@ -76,25 +77,11 @@
       "email": "Thông báo qua email"
     }
   },
-  "uploadPage": {
-    "title": "Tải lên tài liệu mới",
-    "documentTitle": "Tiêu đề tài liệu",
-    "description": "Mô tả",
-    "selectFile": "Chọn tệp",
-    "selected": "Tệp đã chọn",
-    "submit": "Tạo tài liệu",
-    "validation": "Vui lòng điền tiêu đề và chọn một tệp.",
-    "success": "Tạo tài liệu thành công!",
-    "error": "Tạo tài liệu thất bại"
-  },
   "coursesPage": {
-    "title": "Tất cả khóa học",
     "manageTitle": "Quản lý khóa học",
     "createNew": "Tạo khóa học mới",
     "noCourses": "Không tìm thấy khóa học nào.",
     "error": "Không thể tải danh sách khóa học.",
-    "viewDetails": "Xem chi tiết",
-    "download": "Tải xuống",
     "table": {
       "title": "Tiêu đề",
       "description": "Mô tả",
@@ -106,16 +93,24 @@
     "createTitle": "Tạo khóa học mới",
     "loadError": "Không thể tải dữ liệu khóa học.",
     "titleLabel": "Tiêu đề khóa học",
-    "descriptionLabel": "Mô tả chi tiết"
+    "descriptionLabel": "Mô tả chi tiết",
+    "subjectLabel": "Môn học"
   },
   "courseDetailPage": {
-    "error": "Lỗi tải chi tiết khóa học",
     "notFound": "Không tìm thấy khóa học",
-    "backButton": "Quay lại danh sách",
     "materialsTitle": "Tài liệu khóa học",
     "noMaterials": "Chưa có tài liệu nào cho khóa học này.",
-    "downloadMaterial": "Tải tài liệu",
-    "downloadError": "Tải tài liệu thất bại. Vui lòng thử lại."
+    "noDescription": "Không có mô tả"
+  },
+  "subjectsPage": {
+    "manageTitle": "Quản lý Môn học",
+    "createNew": "Tạo Môn học mới",
+    "noSubjects": "Không tìm thấy môn học nào."
+  },
+  "subjectForm": {
+    "editTitle": "Chỉnh sửa Môn học",
+    "createTitle": "Tạo Môn học mới",
+    "nameLabel": "Tên Môn học"
   },
   "notFound": {
     "title": "Oops! Không tìm thấy trang",
