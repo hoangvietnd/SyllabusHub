@@ -41,7 +41,7 @@ const SubjectsPage = () => {
 
   const { data: subjects, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['subjects'],
-    queryFn: () => listSubjects({ page: 1, limit: 1000 }).then(data => data.content),
+    queryFn: () => listSubjects({ page: 1, limit: 1000 }).then(data => data || []),
     placeholderData: [],
   });
 

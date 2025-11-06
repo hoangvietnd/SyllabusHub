@@ -67,7 +67,8 @@ const CourseFormPage = () => {
   // Query for the list of subjects to populate the dropdown
   const { data: subjects, isLoading: isLoadingSubjects } = useQuery({
     queryKey: ['subjects'],
-    queryFn: () => listSubjects({ page: 1, limit: 1000 }).then(data => data.content),
+    queryFn: () => listSubjects({ page: 1, limit: 1000 }).then(data => data || []),
+    placeholderData: [],
   });
 
   const mutationOptions = {

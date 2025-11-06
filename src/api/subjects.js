@@ -52,5 +52,6 @@ export const updateSubject = async ({ id, subjectData }) => {
  * @returns {Promise<void>}
  */
 export const deleteSubject = async (id) => {
-  await api.delete(`/subjects/${id}`);
+  const { data } = await api.delete(`/subjects/${id}`);
+  return data;
 };
