@@ -94,7 +94,9 @@
     "loadError": "Không thể tải dữ liệu khóa học.",
     "titleLabel": "Tiêu đề khóa học",
     "descriptionLabel": "Mô tả chi tiết",
-    "subjectLabel": "Môn học"
+    "subjectLabel": "Môn học",
+    "createdByLabel": "Người tạo",
+    "createdAtLabel": "Ngày tạo"
   },
   "courseDetailPage": {
     "notFound": "Không tìm thấy khóa học",

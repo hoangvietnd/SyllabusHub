@@ -37,7 +37,9 @@ const CourseFormPage = () => {
   const courseSchema = z.object({
     title: z.string().min(3, t('validation.titleMin')),
     description: z.string().optional(),
-    subjectId: z.string().nullable().optional(), // subjectId can be a string or null
+    subjectId: z.union([z.string(), z.number()]).nullable().optional(), // subjectId can be string, number or null
+    createdBy: z.string().optional(),
+    createdAt: z.string().optional(),
   });
 
   const [apiError, setApiError] = useState(null);
@@ -46,23 +48,36 @@ const CourseFormPage = () => {
 
   const { control, handleSubmit, reset, formState: { errors } } = useForm({
     resolver: zodResolver(courseSchema),
-    defaultValues: { title: '', description: '', subjectId: '' }, // Initialize subjectId
+    defaultValues: { title: '', description: '', subjectId: '', createdBy: '', createdAt: '' }, // Initialize subjectId
   });
+
+  // Log validation errors
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      console.log('Validation errors:', errors);
+    }
+  }, [errors]);
 
   // Query for the course to edit
   const { data: courseData, isLoading: isLoadingCourse, isError: isCourseError } = useQuery({
     queryKey: ['course', id],
     queryFn: () => getCourseById(id),
     enabled: isEditMode,
-    onSuccess: (data) => {
-      reset({ 
-        title: data.title, 
-        description: data.description, 
-        subjectId: data.subject?.id || '' // Set subjectId from nested object
-      });
-      setTags(data.tags || []);
-    },
   });
+
+  // Effect to populate form when course data is loaded
+  useEffect(() => {
+    if (courseData && isEditMode) {
+      reset({ 
+        title: courseData.title, 
+        description: courseData.description, 
+        subjectId: courseData.subject?.id || '', // Set subjectId from nested object
+        createdBy: courseData.createdBy || '',
+        createdAt: courseData.createdAt ? new Date(courseData.createdAt).toLocaleString() : '',
+      });
+      setTags(courseData.tags || []);
+    }
+  }, [courseData, isEditMode, reset]);
 
   // Query for the list of subjects to populate the dropdown
   const { data: subjects, isLoading: isLoadingSubjects } = useQuery({
@@ -85,7 +100,7 @@ const CourseFormPage = () => {
 
   const mutation = useMutation({
     mutationFn: (courseData) => 
-      isEditMode ? updateCourse({ id, courseData }) : createCourse(courseData),
+      isEditMode ? updateCourse(id, courseData) : createCourse(courseData),
     ...mutationOptions
   });
 
@@ -104,6 +119,7 @@ const CourseFormPage = () => {
   };
 
   const onSubmit = (formData) => {
+    console.log('Form submitted!', formData); // Debug log
     setApiError(null);
     const submissionData = { 
       ...formData, 
@@ -111,6 +127,7 @@ const CourseFormPage = () => {
       // Ensure subjectId is null if it's an empty string
       subjectId: formData.subjectId || null 
     };
+    console.log('Submission data:', submissionData); // Debug log
     mutation.mutate(submissionData);
   };
 
@@ -200,6 +217,35 @@ const CourseFormPage = () => {
                 ))}
               </Stack>
             </Box>
+
+            {isEditMode && (
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+              <Controller
+                name="createdBy"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('courseForm.createdByLabel')}
+                    fullWidth
+                    disabled
+                  />
+                )}
+              />
+              <Controller
+                name="createdAt"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label={t('courseForm.createdAtLabel')}
+                    fullWidth
+                    disabled
+                  />
+                )}
+              />
+            </Stack>
+            )}
 
             <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{ mt: 4 }}>
               <Button onClick={() => navigate('/courses')} color="inherit" variant='outlined' disabled={isMutating}>
