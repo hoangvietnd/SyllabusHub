@@ -35,7 +35,8 @@
     "description": "Mô tả",
     "name": "Tên",
     "none": "Không có",
-    "download": "Tải xuống"
+    "download": "Tải xuống",
+    "goBack": "Quay lại"
   },
   "validation": {
     "titleMin": "Tiêu đề phải có ít nhất 3 ký tự",

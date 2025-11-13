@@ -48,7 +48,7 @@ const SubjectFormDialog = ({ open, onClose, subject }) => {
     } else {
       reset({ name: '', description: '' });
     }
-  }, [subject, open]); // also reset on open
+  }, [subject, open, reset]);
 
   const mutation = useMutation({
     mutationFn: isEditing ? (data) => updateSubject({ id: subject.id, subjectData: data }) : createSubject,

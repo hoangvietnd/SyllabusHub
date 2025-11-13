@@ -13,20 +13,26 @@ import {
   ListItemIcon,
   ListItemText
 } from '@mui/material';
-import { useAuth } from '../contexts/AuthContext';
+import useAuth from '../hooks/useAuth';
 import api from '../utils/axiosInstance';
 import EmailIcon from '@mui/icons-material/Email';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import PersonIcon from '@mui/icons-material/Person';
 import EditIcon from '@mui/icons-material/Edit';
-import { useTranslation } from 'react-i18next'; // Import hook
+import { useTranslation } from 'react-i18next';
+import useTitle from '../hooks/useTitle';
 
 function ProfilePage() {
   const { user, logout } = useAuth();
-  const { t } = useTranslation(); // Khởi tạo hook
+  const { t } = useTranslation();
+  const { setTitle } = useTitle();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    setTitle(t('sidebar.profile'));
+  }, [setTitle, t]);
 
   useEffect(() => {
     if (user) {

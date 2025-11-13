@@ -17,14 +17,14 @@ import CategoryIcon from '@mui/icons-material/Category';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UploadIcon from '@mui/icons-material/Upload';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import ClassIcon from '@mui/icons-material/Class'; // Import icon mới
+import ClassIcon from '@mui/icons-material/Class';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../contexts/AuthContext'; // Import useAuth
+import useAuth from '../hooks/useAuth';
 
 function Sidebar({ drawerWidth, open }) {
   const { t } = useTranslation();
-  const { user } = useAuth(); // Get user from auth context
+  const { user } = useAuth();
 
   const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
 
@@ -38,7 +38,7 @@ function Sidebar({ drawerWidth, open }) {
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: 'border-box',
-          bgcolor: 'background.paper', // Use theme's paper background
+          bgcolor: 'background.paper',
           color: 'text.primary'
         }
       }}

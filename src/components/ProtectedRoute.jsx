@@ -1,13 +1,13 @@
 import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom'; // Import Outlet
-import { useAuth } from '../contexts/AuthContext';
+import { Navigate, Outlet } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 /**
  * A component to protect routes that require authentication.
  * It now uses <Outlet /> to render child routes, which is the standard practice for React Router v6.
  * This ensures consistent behavior with AuthorizedRoute.
  */
-function ProtectedRoute() { // Removed `children` prop
+function ProtectedRoute() {
   const { isLoggedIn, loading } = useAuth();
 
   // While the AuthContext is initializing, show a loading state.

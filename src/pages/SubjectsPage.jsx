@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { listSubjects, deleteSubject } from '../api/subjects';
+import useTitle from '../hooks/useTitle';
 
 // MUI Components
 import {
@@ -32,6 +33,11 @@ import SubjectFormDialog from '../components/subjects/SubjectFormDialog';
 const SubjectsPage = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { setTitle } = useTitle();
+
+  useEffect(() => {
+    setTitle(t('sidebar.subjects'));
+  }, [setTitle, t]);
 
   // State for dialogs
   const [isFormOpen, setFormOpen] = useState(false);

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { listCourses, deleteCourse } from '../api/courses';
+import useTitle from '../hooks/useTitle';
 
 import {
   Box,
@@ -30,13 +31,18 @@ const CoursesPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { setTitle } = useTitle();
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isConfirmOpen, setConfirmOpen] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
 
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  useEffect(() => {
+    setTitle(t('sidebar.courses'));
+  }, [setTitle, t]);
+
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['courses', page, rowsPerPage],
     queryFn: () => listCourses({ page: page + 1, limit: rowsPerPage }),
     keepPreviousData: true,

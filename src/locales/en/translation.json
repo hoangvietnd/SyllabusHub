@@ -35,7 +35,8 @@
     "description": "Description",
     "name": "Name",
     "none": "None",
-    "download": "Download"
+    "download": "Download",
+    "goBack": "Go Back"
   },
   "validation": {
     "titleMin": "Title must be at least 3 characters long",
@@ -94,7 +95,9 @@
     "loadError": "Could not load course data.",
     "titleLabel": "Course Title",
     "descriptionLabel": "Detailed Description",
-    "subjectLabel": "Subject"
+    "subjectLabel": "Subject",
+    "createdByLabel": "Created By",
+    "createdAtLabel": "Created At"
   },
   "courseDetailPage": {
     "notFound": "Course not found",

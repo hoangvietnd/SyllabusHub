@@ -6,7 +6,7 @@ export function isTokenValid(token) {
         if (!exp) return false;
         const now = Date.now() / 1000;
         return exp > now;
-    } catch (e) {
+    } catch  {
         return false;
     }
 }
@@ -25,7 +25,7 @@ export async function refreshAccessToken() {
         const data = await res.json();
         localStorage.setItem('token', data.accessToken);
         return data.accessToken;
-    } catch (err) {
+    } catch  {
         return null;
     }
 }

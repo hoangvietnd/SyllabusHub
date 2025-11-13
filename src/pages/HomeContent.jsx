@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Box, Grid, Paper, Button, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import useTitle from '../hooks/useTitle';
 
 function HomeContent() {
   const { t } = useTranslation();
+  const { setTitle } = useTitle();
+
+  useEffect(() => {
+    setTitle(t('sidebar.home'));
+  }, [setTitle, t]);
 
   return (
     <Box>

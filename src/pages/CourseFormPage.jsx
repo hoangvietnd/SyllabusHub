@@ -21,6 +21,7 @@ import {
   Select
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import useTitle from '../hooks/useTitle';
 
 // API Calls
 import { getCourseById, createCourse, updateCourse } from '../api/courses';
@@ -31,7 +32,12 @@ const CourseFormPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { setTitle } = useTitle();
   const isEditMode = Boolean(id);
+
+  useEffect(() => {
+    setTitle(isEditMode ? t('courseForm.editTitle') : t('courseForm.createTitle'));
+  }, [isEditMode, setTitle, t]);
 
   // Schema for validation, now including subjectId
   const courseSchema = z.object({

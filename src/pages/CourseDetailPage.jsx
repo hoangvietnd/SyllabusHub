@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCourseById } from '../api/courses';
 import { deleteMaterial } from '../api/materials';
-// CORRECTED IMPORT PATH AGAIN
 import { getApiBaseUrl } from '../utils/axiosInstance';
+import useTitle from '../hooks/useTitle';
 
 // MUI Components
 import {
@@ -27,7 +27,7 @@ import {
 } from '@mui/material';
 
 // MUI Icons
-import { Upload, Delete, Download, Edit, Article, School } from '@mui/icons-material';
+import { Upload, Delete, Download, Edit, Article, School, ArrowBack } from '@mui/icons-material';
 
 // Local Components
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
@@ -38,6 +38,7 @@ const CourseDetailPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { setTitle } = useTitle();
 
   const [isUploadOpen, setUploadOpen] = useState(false);
   const [isConfirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
@@ -52,8 +53,18 @@ const CourseDetailPage = () => {
   } = useQuery({
     queryKey: ['course', id],
     queryFn: () => getCourseById(id),
-    enabled: !!id, // Ensure query runs only when id is available
+    enabled: !!id,
   });
+
+  useEffect(() => {
+    if (course?.title) {
+      setTitle(course.title);
+    } else if (isLoadingCourse) {
+      setTitle(t('loading'));
+    } else {
+      setTitle(t('courseDetailPage.title'));
+    }
+  }, [course, isLoadingCourse, setTitle, t]);
 
   const { mutate: doDeleteMaterial, isLoading: isDeletingMaterial } = useMutation({
     mutationFn: deleteMaterial,
@@ -62,7 +73,6 @@ const CourseDetailPage = () => {
       queryClient.invalidateQueries(['course', id]); 
     },
     onError: (error) => {
-      // You can add more robust error handling here, e.g., a snackbar
       console.error("Failed to delete material:", error);
     }
   });
@@ -95,10 +105,18 @@ const CourseDetailPage = () => {
   }
 
   const materials = course.materials || [];
-  const apiBaseUrl = getApiBaseUrl(); // Get base URL from the instance
+  const apiBaseUrl = getApiBaseUrl();
 
   return (
     <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+       <Button 
+        startIcon={<ArrowBack />} 
+        onClick={() => navigate('/courses')} 
+        sx={{ mb: 2 }}
+      >
+        {t('common.goBack')}
+      </Button>
+
       {/* Course Header */}
       <Paper sx={{ p: { xs: 2, md: 3 }, mb: 3, borderRadius: 2, boxShadow: 3 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
@@ -144,7 +162,6 @@ const CourseDetailPage = () => {
         {materials.length > 0 ? (
           <List>
             {materials.map((material) => {
-              // CORRECTLY CONSTRUCTED URL
               const downloadUrl = `${apiBaseUrl}/materials/download/${material.filePath}`;
               return (
                 <ListItem 
@@ -166,7 +183,7 @@ const CourseDetailPage = () => {
                 >
                   <ListItemIcon><Article /></ListItemIcon>
                   <ListItemText 
-                      primary={material.name} // CORRECT FIELD
+                      primary={material.name}
                       secondary={material.description || t('courseDetailPage.noDescription')}
                   />
                 </ListItem>

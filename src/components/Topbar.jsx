@@ -13,11 +13,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useNavigate } from 'react-router-dom';
 import LanguageSwitcher from './LanguageSwitcher';
-import { useAuth } from '../contexts/AuthContext'; // Import useAuth
+import useAuth from '../hooks/useAuth';
+import useTitle from '../hooks/useTitle';
 
 function Topbar({ toggleDrawer, open, drawerWidth }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const { logout } = useAuth(); // Lấy hàm logout từ context
+  const { logout } = useAuth();
+  const { title } = useTitle();
   const menuOpen = Boolean(anchorEl);
   const navigate = useNavigate();
 
@@ -72,7 +74,7 @@ function Topbar({ toggleDrawer, open, drawerWidth }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            CourseHub
+            {title}
           </Typography>
         </Box>
 
