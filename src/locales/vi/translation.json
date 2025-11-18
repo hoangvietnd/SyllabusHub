@@ -5,9 +5,7 @@
     "courses": "Các khóa học",
     "newMaterials": "Tài liệu mới",
     "categories": "Danh mục",
-    "settings": "Cài đặt",
-    "upload": "Tải lên tài liệu",
-    "createCourse": "Tạo khóa học mới"
+    "settings": "Cài đặt"
   },
   "home": {
     "searchPlaceholder": "Tìm tài liệu...",
@@ -36,7 +34,8 @@
     "name": "Tên",
     "none": "Không có",
     "download": "Tải xuống",
-    "goBack": "Quay lại"
+    "goBack": "Quay lại",
+    "view": "Xem"
   },
   "validation": {
     "titleMin": "Tiêu đề phải có ít nhất 3 ký tự",
@@ -56,10 +55,6 @@
     "uploading": "Đang tải lên...",
     "success": "Tệp đã được tải lên thành công!",
     "fileRequired": "Vui lòng chọn một tệp để tải lên."
-  },
-  "createCoursePage": {
-    "courseTags": "Thẻ (Tags)",
-    "tagsHelperText": "Nhấn Enter để thêm thẻ"
   },
   "settings": {
     "title": "Cài đặt",
@@ -83,6 +78,7 @@
     "createNew": "Tạo khóa học mới",
     "noCourses": "Không tìm thấy khóa học nào.",
     "error": "Không thể tải danh sách khóa học.",
+    "searchPlaceholder": "Tìm kiếm theo tiêu đề khóa học...",
     "table": {
       "title": "Tiêu đề",
       "description": "Mô tả",
@@ -97,7 +93,9 @@
     "descriptionLabel": "Mô tả chi tiết",
     "subjectLabel": "Môn học",
     "createdByLabel": "Người tạo",
-    "createdAtLabel": "Ngày tạo"
+    "createdAtLabel": "Ngày tạo",
+    "courseTags": "Thẻ",
+    "tagsHelperText": "Nhấn Enter để thêm thẻ. Thẻ giúp tìm kiếm và phân loại dễ dàng hơn."
   },
   "courseDetailPage": {
     "notFound": "Không tìm thấy khóa học",
@@ -108,7 +106,8 @@
   "subjectsPage": {
     "manageTitle": "Quản lý Môn học",
     "createNew": "Tạo Môn học mới",
-    "noSubjects": "Không tìm thấy môn học nào."
+    "noSubjects": "Không tìm thấy môn học nào.",
+    "searchPlaceholder": "Tìm kiếm theo tên môn học..."
   },
   "subjectForm": {
     "editTitle": "Chỉnh sửa Môn học",

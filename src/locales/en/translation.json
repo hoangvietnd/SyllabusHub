@@ -5,9 +5,7 @@
     "courses": "Courses",
     "newMaterials": "New Materials",
     "categories": "Categories",
-    "settings": "Settings",
-    "upload": "Upload Material",
-    "createCourse": "Create New Course"
+    "settings": "Settings"
   },
   "home": {
     "searchPlaceholder": "Search for materials...",
@@ -36,7 +34,8 @@
     "name": "Name",
     "none": "None",
     "download": "Download",
-    "goBack": "Go Back"
+    "goBack": "Go Back",
+    "view": "View"
   },
   "validation": {
     "titleMin": "Title must be at least 3 characters long",
@@ -56,10 +55,6 @@
     "uploading": "Uploading...",
     "success": "File uploaded successfully!",
     "fileRequired": "Please select a file to upload."
-  },
-  "createCoursePage": {
-    "courseTags": "Tags",
-    "tagsHelperText": "Press Enter to add a tag"
   },
   "settings": {
     "title": "Settings",
@@ -83,6 +78,7 @@
     "createNew": "Create New Course",
     "noCourses": "No courses found.",
     "error": "Could not load courses.",
+    "searchPlaceholder": "Search by course title...",
     "table": {
       "title": "Title",
       "description": "Description",
@@ -97,7 +93,9 @@
     "descriptionLabel": "Detailed Description",
     "subjectLabel": "Subject",
     "createdByLabel": "Created By",
-    "createdAtLabel": "Created At"
+    "createdAtLabel": "Created At",
+    "courseTags": "Tags",
+    "tagsHelperText": "Press Enter to add a tag. Helps in searching and categorizing."
   },
   "courseDetailPage": {
     "notFound": "Course not found",
@@ -108,14 +106,15 @@
   "subjectsPage": {
     "manageTitle": "Manage Subjects",
     "createNew": "Create New Subject",
-    "noSubjects": "No subjects found."
+    "noSubjects": "No subjects found.",
+    "searchPlaceholder": "Search by subject name..."
   },
   "subjectForm": {
     "editTitle": "Edit Subject",
     "createTitle": "Create New Subject",
     "nameLabel": "Subject Name"
   },
-  "notFound": {
+"notFound": {
     "title": "Oops! Page not found",
     "message": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
     "goHome": "Go to Homepage"

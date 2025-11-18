@@ -15,18 +15,12 @@ import BookIcon from '@mui/icons-material/Book';
 import NewReleasesIcon from '@mui/icons-material/NewReleases';
 import CategoryIcon from '@mui/icons-material/Category';
 import SettingsIcon from '@mui/icons-material/Settings';
-import UploadIcon from '@mui/icons-material/Upload';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import ClassIcon from '@mui/icons-material/Class';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/useAuth';
 
 function Sidebar({ drawerWidth, open }) {
   const { t } = useTranslation();
-  const { user } = useAuth();
-
-  const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
 
   return (
     <Drawer
@@ -77,23 +71,6 @@ function Sidebar({ drawerWidth, open }) {
           <ListItemIcon><CategoryIcon /></ListItemIcon>
           <ListItemText primary={t('sidebar.categories')} />
         </ListItem>
-        
-        <Divider sx={{ my: 1 }} />
-
-        {/* Admin/Teacher Specific Navigation */}
-        {isAdminOrTeacher && (
-          <>
-            <ListItem button component={Link} to="/admin/create-course">
-              <ListItemIcon><AddCircleOutlineIcon /></ListItemIcon>
-              <ListItemText primary={t('sidebar.createCourse')} />
-            </ListItem>
-            <ListItem button component={Link} to="/admin/upload">
-              <ListItemIcon><UploadIcon /></ListItemIcon>
-              <ListItemText primary={t('sidebar.upload')} />
-            </ListItem>
-          </>
-        )}
-
       </List>
 
       <Box sx={{ flexGrow: 1 }} />

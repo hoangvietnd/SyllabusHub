@@ -2,13 +2,23 @@ import api from '../utils/axiosInstance';
 
 /**
  * Fetches a paginated list of subjects.
- * @param {object} params - Query parameters for pagination.
- * @param {number} params.page - The page number to fetch.
+ * @param {object} params - Query parameters for pagination and filtering.
+ * @param {number} params.page - The page number to fetch (1-indexed).
  * @param {number} params.limit - The number of items per page.
+ * @param {string} [params.name] - A search term to filter subjects by name.
  * @returns {Promise<object>} A promise that resolves to the paginated list of subjects.
  */
-export const listSubjects = async ({ page = 1, limit = 1000 }) => { // Default to a large limit to get all subjects for dropdowns
-  const { data } = await api.get('/subjects', { params: { page, limit } });
+export const listSubjects = async ({ page = 1, limit = 10, name = '' }) => {
+  const params = {
+    page: page - 1,
+    size: limit,
+  };
+
+  if (name) {
+    params.name = name.trim();
+  }
+
+  const { data } = await api.get('/subjects', { params });
   return data;
 };
 

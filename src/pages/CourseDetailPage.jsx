@@ -6,6 +6,7 @@ import { getCourseById } from '../api/courses';
 import { deleteMaterial } from '../api/materials';
 import { getApiBaseUrl } from '../utils/axiosInstance';
 import useTitle from '../hooks/useTitle';
+import useAuth from '../hooks/useAuth'; // Import useAuth
 
 // MUI Components
 import {
@@ -39,10 +40,14 @@ const CourseDetailPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setTitle } = useTitle();
+  const { user } = useAuth(); // Get user from auth context
 
   const [isUploadOpen, setUploadOpen] = useState(false);
   const [isConfirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [materialToDelete, setMaterialToDelete] = useState(null);
+
+  const isAdmin = user?.role === 'ADMIN';
+  const isTeacher = user?.role === 'TEACHER';
 
   const { 
     data: course, 
@@ -134,9 +139,11 @@ const CourseDetailPage = () => {
                     {course.description}
                 </Typography>
             </Box>
-            <Button variant="outlined" startIcon={<Edit />} onClick={() => navigate(`/courses/edit/${id}`)}>
-              {t('common.edit')}
-            </Button>
+            {isAdmin && ( // Only admins can edit course details
+              <Button variant="outlined" startIcon={<Edit />} onClick={() => navigate(`/courses/edit/${id}`)}>
+                {t('common.edit')}
+              </Button>
+            )}
         </Stack>
         {course.tags && course.tags.length > 0 && (
             <>
@@ -152,9 +159,11 @@ const CourseDetailPage = () => {
       <Paper sx={{ p: { xs: 2, md: 3 }, borderRadius: 2, boxShadow: 3 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
           <Typography variant="h5">{t('courseDetailPage.materialsTitle')}</Typography>
-          <Button variant="contained" startIcon={<Upload />} onClick={() => setUploadOpen(true)}>
-            {t('materialUpload.addNew')}
-          </Button>
+          {(isAdmin || isTeacher) && ( // Admins and Teachers can upload
+            <Button variant="contained" startIcon={<Upload />} onClick={() => setUploadOpen(true)}>
+              {t('materialUpload.addNew')}
+            </Button>
+          )}
         </Stack>
 
         <Divider sx={{mb: 2}}/>
@@ -173,11 +182,13 @@ const CourseDetailPage = () => {
                               <Download />
                           </IconButton>
                       </Tooltip>
-                      <Tooltip title={t('common.delete')}>
-                          <IconButton edge="end" onClick={() => handleDeleteClick(material.id)} disabled={isDeletingMaterial}>
-                              <Delete />
-                          </IconButton>
-                      </Tooltip>
+                      {(isAdmin || isTeacher) && ( // Admins and Teachers can delete
+                        <Tooltip title={t('common.delete')}>
+                            <IconButton edge="end" onClick={() => handleDeleteClick(material.id)} disabled={isDeletingMaterial}>
+                                <Delete />
+                            </IconButton>
+                        </Tooltip>
+                      )}
                     </Stack>
                   }
                 >
@@ -198,12 +209,14 @@ const CourseDetailPage = () => {
       </Paper>
 
       {/* Dialogs */}
-      <MaterialUploadDialog
-        open={isUploadOpen}
-        onClose={() => setUploadOpen(false)}
-        courseId={id}
-        onSuccess={handleUploadSuccess}
-      />
+      {(isAdmin || isTeacher) && (
+          <MaterialUploadDialog
+              open={isUploadOpen}
+              onClose={() => setUploadOpen(false)}
+              courseId={id}
+              onSuccess={handleUploadSuccess}
+          />
+      )}
       <ConfirmationDialog
         open={isConfirmDeleteOpen}
         onClose={() => setConfirmDeleteOpen(false)}

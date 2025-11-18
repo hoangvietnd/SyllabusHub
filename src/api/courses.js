@@ -1,12 +1,24 @@
-import axiosInstance from '../utils/axiosInstance';
+import api from '../utils/axiosInstance';
 
 /**
  * Fetches a paginated list of courses from the backend.
+ * @param {object} params - Query parameters for pagination and filtering.
+ * @param {number} params.page - The page number to fetch (1-indexed).
+ * @param {number} params.limit - The number of items per page.
+ * @param {string} [params.title] - A search term to filter courses by title.
+ * @returns {Promise<object>} A promise that resolves to the paginated list of courses.
  */
-export const listCourses = async ({ page = 1, limit = 10 } = {}) => {
-  const { data } = await axiosInstance.get('/courses', {
-    params: { page: page - 1, size: limit },
-  });
+export const listCourses = async ({ page = 1, limit = 10, title = '' }) => {
+  const params = {
+    page: page - 1,
+    size: limit,
+  };
+
+  if (title) {
+    params.title = title.trim();
+  }
+
+  const { data } = await api.get('/courses', { params });
   return data;
 };
 
@@ -14,7 +26,7 @@ export const listCourses = async ({ page = 1, limit = 10 } = {}) => {
  * Fetches a single course by its ID.
  */
 export const getCourseById = async (courseId) => {
-  const { data } = await axiosInstance.get(`/courses/${courseId}`);
+  const { data } = await api.get(`/courses/${courseId}`);
   return data;
 };
 
@@ -22,7 +34,7 @@ export const getCourseById = async (courseId) => {
  * Creates a new course.
  */
 export const createCourse = async (courseData) => {
-  const { data } = await axiosInstance.post('/courses', courseData);
+  const { data } = await api.post('/courses', courseData);
   return data;
 };
 
@@ -30,7 +42,7 @@ export const createCourse = async (courseData) => {
  * Updates an existing course.
  */
 export const updateCourse = async (courseId, courseData) => {
-  const { data } = await axiosInstance.put(`/courses/${courseId}`, courseData);
+  const { data } = await api.put(`/courses/${courseId}`, courseData);
   return data;
 };
 
@@ -38,6 +50,5 @@ export const updateCourse = async (courseId, courseData) => {
  * Deletes a course by its ID.
  */
 export const deleteCourse = async (courseId) => {
-  const { data } = await axiosInstance.delete(`/courses/${courseId}`);
-  return data; // Or handle empty response if backend returns 204 No Content
+  await api.delete(`/courses/${courseId}`);
 };
